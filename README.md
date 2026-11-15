@@ -63,7 +63,15 @@ Full disclosure, those are not hashes and it hurt me writing the previous senten
 This tool is used when you have credentials to a machine account and would like to impersonate other users on the same machine. Machine account credential should be supplied in the `kerberos URL` format, while the user to be impersonated should be in the usual UserPrincialName format eg `username@FQDN`
 
 ## minikerberos-getS4U2proxy
-This tool is used when you have a machine account which has the permission to perform Kerberos Resource-based Constrained Delegation (RBCD). With this, you can impersonate users. For this to work, the machine account must be allowed to delegate on all protocols, not kerberos-only!
+This tool performs the full S4U2self + S4U2proxy chain: it first requests an S4U2self service ticket for the target user to the account itself, then uses that ticket as `additional-ticket` in an S4U2proxy request to obtain a service ticket impersonating the target user against the given SPN.  
+It is used when you control an account which is allowed to perform Kerberos Resource-based Constrained Delegation (RBCD) against the target (ie. the account's SID is present in the target's `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute), or classic constrained delegation.  
+The intermediate S4U2self ticket can be stored via the `--selfkirbi` parameter.
+
+## minikerberos-finddelegation
+Enumerates all Kerberos delegation settings (unconstrained, constrained and resource-based constrained delegation) from an LDAP JSON/JSONL dump and prints the exploitation chains for each finding.  
+The tool parses the `msDS-AllowedToActOnBehalfOfOtherIdentity` security descriptor (hex or base64 encoded) and lists the SIDs allowed to impersonate users against each target, so resource-based delegation no longer needs to be decoded by hand.  
+Attributes used: `sAMAccountName`, `userAccountControl`, `servicePrincipalName`, `msDS-AllowedToDelegateTo`, `msDS-AllowedToActOnBehalfOfOtherIdentity`.  
+A single raw `msDS-AllowedToActOnBehalfOfOtherIdentity` blob (binary, hex or base64) can also be decoded via the `--sd` parameter.
 
 ## minikerberos-ccacheroast
 Performs "Kerberoast" attack on a CCACHE file. You get back the "hashes" for all TGS tickets stored in the CCACHE file.

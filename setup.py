@@ -66,6 +66,7 @@ setup(
 			'minikerberos-getTGS       = minikerberos.examples.getTGS:main',
 			'minikerberos-getS4U2proxy = minikerberos.examples.getS4U2proxy:main',
 			'minikerberos-getS4U2self  = minikerberos.examples.getS4U2self:main',
+			'minikerberos-finddelegation = minikerberos.examples.finddelegation:main',
 			'minikerberos-getNTPKInit  = minikerberos.examples.getNT:main',
 			'minikerberos-cve202233647 = minikerberos.examples.CVE_2022_33647:main',
 			'minikerberos-cve202233679 = minikerberos.examples.CVE_2022_33679:main',
